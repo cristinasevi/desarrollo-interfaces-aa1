@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { Movie } from '../types/movie';
 
-const FavoritesContext = createContext(null);
+const FavoritesContext = createContext<any>(null);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<Movie[]>(() => {
