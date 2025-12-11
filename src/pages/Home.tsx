@@ -11,26 +11,44 @@ export default function Home() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
+      setError('');
       
-      const popular = await getPopularMovies();
-      const nowPlaying = await getNowPlayingMovies();
-      const topRated = await getTopRatedMovies();
+      try {
+        const popular = await getPopularMovies();
+        const nowPlaying = await getNowPlayingMovies();
+        const topRated = await getTopRatedMovies();
 
-      setPopularMovies(popular.results);
-      setNowPlayingMovies(nowPlaying.results);
-      setTopRatedMovies(topRated.results);
-      
-      setLoading(false);
+        setPopularMovies(popular.results);
+        setNowPlayingMovies(nowPlaying.results);
+        setTopRatedMovies(topRated.results);
+      } catch (err) {
+        setError('Error al cargar las películas. Intenta de nuevo.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMovies();
   }, []);
 
   if (loading) return <Loading />;
+
+  if (error) {
+    return (
+      <div className="home__error">
+        <p>😢 {error}</p>
+        <button onClick={() => window.location.reload()}>
+          Reintentar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="home">
