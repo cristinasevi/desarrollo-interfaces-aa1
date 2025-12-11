@@ -15,28 +15,47 @@ export default function MovieDetail() {
   const [cast, setCast] = useState<CastMember[]>([]);
   const [similar, setSimilar] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!id) return;
 
     const fetchMovieData = async () => {
       setLoading(true);
+      setError('');
 
-      const movieData = await getMovieDetail(Number(id));
-      const castData = await getMovieCredits(Number(id));
-      const similarData = await getSimilarMovies(Number(id));
+      try {
+        const movieData = await getMovieDetail(Number(id));
+        const castData = await getMovieCredits(Number(id));
+        const similarData = await getSimilarMovies(Number(id));
 
-      setMovie(movieData);
-      setCast(castData.slice(0, 6)); // Solo los primeros 6 actores
-      setSimilar(similarData.results.slice(0, 6)); // Solo 6 películas similares
-      
-      setLoading(false);
+        setMovie(movieData);
+        setCast(castData.slice(0, 6)); // Solo los primeros 6 actores
+        setSimilar(similarData.results.slice(0, 6)); // Solo 6 películas similares
+      } catch (err) {
+        setError('Error al cargar la película');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMovieData();
   }, [id]);
 
   if (loading) return <Loading />;
+
+  if (error) {
+    return (
+      <div className="movie-detail__error">
+        <h2>😢 {error}</h2>
+        <Link to="/" className="movie-detail__back">
+          Volver al inicio
+        </Link>
+      </div>
+    );
+  }
+
   if (!movie) {
     return (
       <div className="movie-detail__error">

@@ -15,6 +15,7 @@ export default function Search() {
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOrder, setSortOrder] = useState('');
 
@@ -26,11 +27,20 @@ export default function Search() {
     if (!query) return;
 
     setLoading(true);
-    searchMovies(query).then(data => {
-      setMovies(data.results);
-      setFilteredMovies(data.results);
-      setLoading(false);
-    });
+    setError('');
+    
+    searchMovies(query)
+      .then(data => {
+        setMovies(data.results);
+        setFilteredMovies(data.results);
+      })
+      .catch(err => {
+        setError('Error en la búsqueda. Intenta de nuevo.');
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [query]);
 
   useEffect(() => {
@@ -61,6 +71,11 @@ export default function Search() {
 
       <div className="search__content">
         {loading && <Loading />}
+        {error && (
+          <div className="search__error">
+            <p>😢 {error}</p>
+          </div>
+        )}
         {!loading && query && (
           <>
             <div className="search__controls">

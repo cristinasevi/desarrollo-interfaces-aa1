@@ -28,6 +28,16 @@
   font-size: 1.2rem;
 }
 
+.home__error button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .home__hero {
     padding: 3rem 1rem;

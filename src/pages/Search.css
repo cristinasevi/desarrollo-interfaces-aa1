@@ -101,3 +101,12 @@
     min-width: 100%;
   }
 }
+
+.search__error {
+  text-align: center;
+  padding: 2rem;
+  color: #e63946;
+  background: rgba(230, 57, 70, 0.1);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
